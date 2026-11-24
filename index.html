@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chapter 5: My Hobby - Kelas 3 SD</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts ramah anak (Fredoka & Nunito) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(135deg, #E0F2FE 0%, #FEF9C3 50%, #DCFCE7 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, .font-display {
+      font-family: 'Fredoka', sans-serif;
+    }
+    /* Efek tombol 3D ceria ramah anak */
+    .btn-3d {
+      transition: all 0.15s ease;
+      box-shadow: 0 5px 0 rgba(0, 0, 0, 0.18);
+    }
+    .btn-3d:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 0 rgba(0, 0, 0, 0.18);
+    }
+    .btn-3d:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.18);
+    }
+    /* Animasi memantul lembut */
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+    .animate-float {
+      animation: floatSlow 3s ease-in-out infinite;
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.85); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .animate-pop {
+      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    /* Custom scrollbar untuk tab horizontal di layar kecil */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="text-slate-800 select-none pb-12">
+
+  <!-- Toast / Message Box (Pengganti alert) -->
+  <div id="toast-box" class="fixed top-5 right-5 z-50 hidden max-w-sm transform transition-all duration-300">
+    <div id="toast-content" class="flex items-center gap-3 px-5 py-4 rounded-2xl shadow-xl border-4 border-white text-white font-bold text-base bg-emerald-500">
+      <span id="toast-icon" class="text-2xl">🌟</span>
+      <span id="toast-text">Hebat sekali!</span>
+    </div>
+  </div>
+
+  <!-- HEADER UTAMA -->
+  <header class="bg-gradient-to-r from-sky-500 via-blue-500 to-indigo-500 text-white shadow-lg border-b-4 border-sky-700 sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-yellow-400 text-slate-900 flex items-center justify-center text-2xl shadow-md border-2 border-white animate-float">
+          🎨
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="bg-yellow-300 text-slate-900 text-xs font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Fase B • Kelas 3 SD</span>
+            <span class="hidden sm:inline-block bg-white/20 text-white text-xs font-bold px-2.5 py-0.5 rounded-full">Semester 2</span>
+          </div>
+          <h1 class="text-xl sm:text-2xl md:text-3xl font-bold tracking-wide drop-shadow">
+            Chapter 5: My Hobby
+          </h1>
+        </div>
+      </div>
+
+      <!-- Skor Bintang Siswa & Kontrol Audio -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <div class="bg-white/20 backdrop-blur-sm border-2 border-white/40 rounded-2xl px-3.5 py-1.5 flex items-center gap-2">
+          <span class="text-2xl">⭐</span>
+          <div>
+            <p class="text-[10px] uppercase font-extrabold text-sky-100 leading-none">Bintangku</p>
+            <p id="total-stars" class="text-lg sm:text-xl font-black text-yellow-300 leading-tight">0</p>
+          </div>
+        </div>
+        <button onclick="testAudioSystem()" title="Cek Suara" class="btn-3d bg-amber-400 hover:bg-amber-300 text-slate-900 font-extrabold px-3 py-2 rounded-2xl border-2 border-white flex items-center gap-1.5 text-sm">
+          <span class="text-lg">🔊</span>
+          <span class="hidden md:inline">Cek Suara</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- NAVIGASI TAB RAMAH ANAK -->
+    <nav class="bg-white/95 backdrop-blur border-t-2 border-sky-200 px-2 py-2.5 shadow-inner">
+      <div class="max-w-6xl mx-auto flex items-center justify-start md:justify-center gap-2 overflow-x-auto no-scrollbar">
+        <button onclick="switchTab('ready')" id="tab-ready" class="nav-tab btn-3d flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-2xl font-display font-bold text-sm sm:text-base bg-amber-400 text-slate-900 border-2 border-amber-500">
+          <span class="text-xl">🚀</span>
+          <span>Let's Get Ready</span>
+        </button>
+        <button onclick="switchTab('listen')" id="tab-listen" class="nav-tab btn-3d flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-2xl font-display font-bold text-sm sm:text-base bg-white text-slate-700 border-2 border-slate-200 hover:bg-sky-50">
+          <span class="text-xl">👂</span>
+          <span>1. LISTEN</span>
+        </button>
+        <button onclick="switchTab('speak')" id="tab-speak" class="nav-tab btn-3d flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-2xl font-display font-bold text-sm sm:text-base bg-white text-slate-700 border-2 border-slate-200 hover:bg-emerald-50">
+          <span class="text-xl">🗣️</span>
+          <span>2. SPEAK</span>
+        </button>
+        <button onclick="switchTab('write')" id="tab-write" class="nav-tab btn-3d flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-2xl font-display font-bold text-sm sm:text-base bg-white text-slate-700 border-2 border-slate-200 hover:bg-purple-50">
+          <span class="text-xl">✏️</span>
+          <span>3. WRITE</span>
+        </button>
+        <button onclick="switchTab('reflect')" id="tab-reflect" class="nav-tab btn-3d flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-2xl font-display font-bold text-sm sm:text-base bg-white text-slate-700 border-2 border-slate-200 hover:bg-rose-50">
+          <span class="text-xl">😊</span>
+          <span>Refleksi Diri</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- KONTEN UTAMA -->
+  <main class="max-w-6xl mx-auto px-4 pt-6">
+
+    <!-- ========================================================= -->
+    <!-- TAB 0: LET'S GET READY & FLASHCARDS (LISTEN & SAY + TPR)  -->
+    <!-- ========================================================= -->
+    <section id="section-ready" class="tab-section space-y-6 animate-pop">
+      <!-- Banner Apersepsi (Sesuai Kegiatan Awal & Activity 1 RPP) -->
+      <div class="bg-white rounded-3xl p-5 sm:p-7 shadow-xl border-4 border-amber-300 relative overflow-hidden">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
+          <div class="space-y-3 flex-1">
+            <span class="inline-block bg-amber-100 text-amber-800 font-extrabold px-3 py-1 rounded-full text-xs sm:text-sm">
+              👋 Apersepsi & Tujuan Belajar
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 leading-snug">
+              "Today, we're going to listen and name different hobbies!"
+            </h2>
+            <p class="text-slate-600 font-semibold text-sm sm:text-base">
+              Ayo dengarkan pertanyaan pemantik dari guru, tirukan ucapannya, dan peragakan gerakan tubuh (<span class="text-sky-600 font-extrabold">TPR - Total Physical Response</span>)!
+            </p>
+            
+            <!-- Tombol Pertanyaan Pemantik Sesuai Skenario RPP -->
+            <div class="flex flex-wrap gap-3 pt-2">
+              <button onclick="speakText('What is your hobby?')" class="btn-3d bg-sky-500 hover:bg-sky-400 text-white font-bold px-4 py-3 rounded-2xl flex items-center gap-2 text-sm sm:text-base">
+                <span class="text-xl">🔊</span>
+                <span>"What is your hobby?"</span>
+              </button>
+              <button onclick="speakText('Do you like playing football?')" class="btn-3d bg-emerald-500 hover:bg-emerald-400 text-white font-bold px-4 py-3 rounded-2xl flex items-center gap-2 text-sm sm:text-base">
+                <span class="text-xl">⚽</span>
+                <span>"Do you like playing football?"</span>
+              </button>
+              <button onclick="speakText('I like playing football!')" class="btn-3d bg-orange-500 hover:bg-orange-400 text-white font-bold px-4 py-3 rounded-2xl flex items-center gap-2 text-sm sm:text-base">
+                <span class="text-xl">💬</span>
+                <span>"I like playing football!"</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Kartu Interaktif Guru Bertanya -->
+          <div class="bg-sky-50 border-2 border-sky-200 rounded-3xl p-4 w-full lg:w-80 text-center space-y-2">
+            <div class="text-4xl">🏫</div>
+            <p class="font-display font-bold text-sky-800 text-lg">Petunjuk Belajar</p>
+            <p class="text-xs sm:text-sm text-slate-600 font-semibold">
+              Klik tombol <span class="bg-sky-200 text-sky-900 px-1.5 py-0.5 rounded font-bold">🔊 Dengar Kata</span> pada setiap kartu di bawah, lalu tirukan bersama teman sekelas dengan gerakan tubuh!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Judul 6 Kosakata Target -->
+      <div class="flex flex-wrap items-center justify-between gap-2 pt-2">
+        <h3 class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
+          <span class="bg-yellow-400 w-9 h-9 rounded-xl flex items-center justify-center text-lg shadow">📚</span>
+          <span>6 Kosakata Hobi (Listen & Say)</span>
+        </h3>
+        <button onclick="playAllVocabulary()" class="btn-3d bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-4 py-2 rounded-2xl text-sm flex items-center gap-2">
+          <span>▶️</span>
+          <span>Putar Semua Kosakata Berurutan</span>
+        </button>
+      </div>
+
+      <!-- Grid 6 Kartu Flashcard Interaktif -->
+      <div id="flashcards-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Diisi otomatis oleh JavaScript -->
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TAB 1: LISTEN (LISTEN & CHECK / MATCH - LKPD ACTIVITY 1)  -->
+    <!-- ========================================================= -->
+    <section id="section-listen" class="tab-section hidden space-y-6 animate-pop">
+      <div class="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border-4 border-sky-300">
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b-2 border-slate-100 pb-4 mb-6">
+          <div>
+            <span class="bg-sky-100 text-sky-800 font-extrabold px-3 py-1 rounded-full text-xs">
+              Activity 1 • Listen and Check (√)
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 mt-1">
+              Dengarkan & Pilih Gambar yang Tepat!
+            </h2>
+            <p class="text-slate-600 font-semibold text-sm">
+              Tekan tombol speaker untuk mendengar nama hobi, lalu klik gambar yang sesuai.
+            </p>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="bg-sky-50 border-2 border-sky-200 px-4 py-2 rounded-2xl text-center">
+              <span class="text-xs font-extrabold text-sky-600 block">SOAL</span>
+              <span id="listen-progress" class="font-display font-bold text-xl text-slate-800">1 / 6</span>
+            </div>
+            <div class="bg-amber-50 border-2 border-amber-200 px-4 py-2 rounded-2xl text-center">
+              <span class="text-xs font-extrabold text-amber-600 block">SKOR</span>
+              <span id="listen-score" class="font-display font-bold text-xl text-slate-800">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Area Soal Menyimak -->
+        <div id="listen-quiz-container" class="space-y-6">
+          <!-- Tombol Putar Audio Soal -->
+          <div class="bg-gradient-to-r from-sky-100 to-indigo-100 rounded-3xl p-6 text-center border-2 border-sky-200 space-y-3">
+            <p class="font-bold text-slate-700 text-base sm:text-lg">
+              "Listen carefully! Point to the correct picture!"
+            </p>
+            <div class="flex flex-wrap justify-center gap-3">
+              <button onclick="playListenPrompt('word')" class="btn-3d bg-sky-500 hover:bg-sky-400 text-white font-display font-bold px-6 py-4 rounded-2xl text-lg sm:text-xl flex items-center gap-3 border-2 border-white">
+                <span class="text-2xl">🔊</span>
+                <span>Dengar Kata Hobi</span>
+              </button>
+              <button onclick="playListenPrompt('sentence')" class="btn-3d bg-indigo-500 hover:bg-indigo-400 text-white font-display font-bold px-6 py-4 rounded-2xl text-lg sm:text-xl flex items-center gap-3 border-2 border-white">
+                <span class="text-2xl">🗣️</span>
+                <span>Dengar Kalimat ("I like...")</span>
+              </button>
+            </div>
+            <p class="text-xs text-slate-500 font-bold">Klik tombol di atas kapan saja untuk mengulang suara</p>
+          </div>
+
+          <!-- 3 Pilihan Kartu Gambar -->
+          <div id="listen-options-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <!-- Diisi otomatis oleh JS -->
+          </div>
+
+          <!-- Umpan Balik & Tombol Lanjut -->
+          <div id="listen-feedback" class="hidden rounded-2xl p-4 text-center font-bold text-lg"></div>
+          <div class="flex justify-center">
+            <button id="listen-next-btn" onclick="nextListenQuestion()" class="hidden btn-3d bg-emerald-500 hover:bg-emerald-400 text-white font-display font-bold px-8 py-3.5 rounded-2xl text-lg">
+              Soal Berikutnya ➡️
+            </button>
+          </div>
+        </div>
+
+        <!-- Layar Selesai Kuis Listen -->
+        <div id="listen-complete-screen" class="hidden text-center py-8 space-y-4">
+          <div class="text-6xl animate-bounce">🏆</div>
+          <h3 class="text-3xl font-bold text-slate-800">Awesome! Good Job!</h3>
+          <p id="listen-final-msg" class="text-lg font-bold text-slate-600">Kamu berhasil menyelesaikan latihan menyimak!</p>
+          <button onclick="initListenQuiz()" class="btn-3d bg-sky-500 hover:bg-sky-400 text-white font-display font-bold px-6 py-3 rounded-2xl text-base">
+            🔄 Ulangi Latihan Listen
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TAB 2: SPEAK (CHARADES GAME & LATIHAN PENGUCAPAN MANDIRI) -->
+    <!-- ========================================================= -->
+    <section id="section-speak" class="tab-section hidden space-y-6 animate-pop">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- BAGIAN A: MINI GAME CHARADES (TEBAK GAYA BERPASANGAN) -->
+        <div class="bg-white rounded-3xl p-5 sm:p-7 shadow-xl border-4 border-emerald-300 flex flex-col justify-between space-y-5">
+          <div class="space-y-2">
+            <span class="bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full text-xs">
+              Activity 2 • Pair Work / Kelompok
+            </span>
+            <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+              <span>🎭</span>
+              <span>Mini Game: Charades (Tebak Gaya)</span>
+            </h2>
+            <p class="text-sm text-slate-600 font-semibold">
+              1) Klik <strong>"Acak Kartu Gerakan"</strong>.<br>
+              2) Siswa A memperagakan gerakan TPR tanpa suara & bertanya: <em>"What is my hobby?"</em><br>
+              3) Siswa B menebak: <em>"You like ...!"</em> atau <em>"It is ...!"</em>
+            </p>
+          </div>
+
+          <!-- Kartu Rahasia Charades -->
+          <div id="charades-card-box" class="bg-emerald-50 border-4 border-dashed border-emerald-300 rounded-3xl p-5 text-center min-h-[290px] flex flex-col items-center justify-center space-y-3">
+            <div class="text-5xl">🎴</div>
+            <p class="font-display font-bold text-xl text-emerald-800">Siap Bermain Tebak Gaya?</p>
+            <p class="text-sm text-slate-600 font-semibold">Tekan tombol di bawah untuk mengambil kartu acak!</p>
+          </div>
+
+          <!-- Tombol Kontrol Charades -->
+          <div class="flex flex-wrap gap-3 justify-center">
+            <button onclick="drawCharadesCard()" class="btn-3d bg-emerald-500 hover:bg-emerald-400 text-white font-display font-bold px-5 py-3 rounded-2xl text-base flex items-center gap-2">
+              <span>🎲</span>
+              <span>Acak Kartu Gerakan!</span>
+            </button>
+            <button id="charades-reveal-btn" onclick="revealCharadesCard()" class="hidden btn-3d bg-amber-400 hover:bg-amber-300 text-slate-900 font-display font-bold px-5 py-3 rounded-2xl text-base flex items-center gap-2">
+              <span>👁️</span>
+              <span>Buka Jawaban & Audio</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- BAGIAN B: LATIHAN BERBICARA MANDIRI ("I LIKE ...") -->
+        <div class="bg-white rounded-3xl p-5 sm:p-7 shadow-xl border-4 border-orange-300 flex flex-col justify-between space-y-5">
+          <div class="space-y-2">
+            <span class="bg-orange-100 text-orange-800 font-extrabold px-3 py-1 rounded-full text-xs">
+              Speaking Practice • Pengucapan Mandiri
+            </span>
+            <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+              <span>🎤</span>
+              <span>Ucapkan Hobimu ("I like...")</span>
+            </h2>
+            <p class="text-sm text-slate-600 font-semibold">
+              Pilih salah satu hobi di bawah, dengarkan contohnya, lalu ucapkan dengan lantang dan percaya diri!
+            </p>
+          </div>
+
+          <!-- Pilihan Hobi untuk Diucapkan -->
+          <div id="speak-hobby-selector" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+            <!-- Diisi oleh JS -->
+          </div>
+
+          <!-- Kotak Target Kalimat & Mikrofon -->
+          <div class="bg-orange-50 border-2 border-orange-200 rounded-3xl p-5 text-center space-y-4">
+            <div>
+              <span class="text-xs font-extrabold uppercase text-orange-600 tracking-wider">Ucapkan Kalimat Ini:</span>
+              <p id="speak-target-sentence" class="font-display font-bold text-2xl sm:text-3xl text-slate-800 mt-1">
+                "I like swimming."
+              </p>
+              <p id="speak-target-indo" class="text-sm font-bold text-slate-500">
+                (Saya suka berenang)
+              </p>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-3">
+              <button onclick="listenTargetSpeak()" class="btn-3d bg-sky-500 hover:bg-sky-400 text-white font-bold px-4 py-3 rounded-2xl text-sm flex items-center gap-2">
+                <span>🔊</span>
+                <span>Dengar Contoh</span>
+              </button>
+
+              <button id="mic-record-btn" onclick="startSpeechRecognition()" class="btn-3d bg-rose-500 hover:bg-rose-400 text-white font-bold px-5 py-3 rounded-2xl text-sm flex items-center gap-2">
+                <span>🎙️</span>
+                <span>Rekam Suaraku</span>
+              </button>
+            </div>
+
+            <!-- Hasil Speech Recognition / Tombol Konfirmasi Offline -->
+            <div id="speech-result-box" class="bg-white rounded-2xl p-3 border border-orange-200 text-sm font-bold text-slate-600">
+              Tekan <strong>"Rekam Suaraku"</strong> atau tombol di bawah jika berlatih bersama guru/teman.
+            </div>
+
+            <button onclick="confirmSpokenSelf()" class="btn-3d w-full bg-amber-400 hover:bg-amber-300 text-slate-900 font-display font-bold py-3 rounded-2xl text-base flex items-center justify-center gap-2">
+              <span>⭐</span>
+              <span>Saya Sudah Mengucapkannya dengan Lantang!</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TAB 3: WRITE (WORD SCRAMBLE & MELENGKAPI KALIMAT)         -->
+    <!-- ========================================================= -->
+    <section id="section-write" class="tab-section hidden space-y-6 animate-pop">
+      <!-- Switcher Level Menulis -->
+      <div class="flex flex-wrap justify-center gap-3">
+        <button onclick="switchWriteLevel(1)" id="btn-write-lvl1" class="btn-3d bg-purple-600 text-white font-display font-bold px-5 py-3 rounded-2xl text-base border-2 border-purple-700">
+          🧩 Level 1: Susun Huruf (Word Scramble)
+        </button>
+        <button onclick="switchWriteLevel(2)" id="btn-write-lvl2" class="btn-3d bg-white text-slate-700 font-display font-bold px-5 py-3 rounded-2xl text-base border-2 border-slate-200">
+          ✍️ Level 2: Lengkapi Kalimat ("I like...")
+        </button>
+      </div>
+
+      <!-- LEVEL 1: SUSUN HURUF (WORD SCRAMBLE) -->
+      <div id="write-level-1" class="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border-4 border-purple-300 space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-slate-100 pb-4">
+          <div>
+            <span class="bg-purple-100 text-purple-800 font-extrabold px-3 py-1 rounded-full text-xs">
+              Writing Level 1 • Mengenal Ejaan Kata
+            </span>
+            <h2 class="text-2xl font-bold text-slate-800 mt-1">Susun Huruf Menjadi Nama Hobi!</h2>
+          </div>
+          <div class="bg-purple-50 border-2 border-purple-200 px-4 py-2 rounded-2xl font-display font-bold text-purple-800">
+            Kata <span id="scramble-index">1</span> / 6
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+          <!-- Gambar Petunjuk -->
+          <div class="bg-purple-50 rounded-3xl p-4 border-2 border-purple-200 text-center space-y-3">
+            <div id="scramble-svg-box" class="w-full max-w-[260px] mx-auto rounded-2xl overflow-hidden shadow"></div>
+            <p id="scramble-hint-indo" class="font-bold text-purple-900 text-lg">Arti: Berenang</p>
+            <button onclick="playScrambleAudio()" class="btn-3d bg-sky-500 hover:bg-sky-400 text-white font-bold px-4 py-2 rounded-xl text-sm inline-flex items-center gap-2">
+              <span>🔊</span>
+              <span>Dengar Pengucapan</span>
+            </button>
+          </div>
+
+          <!-- Area Susun Huruf -->
+          <div class="space-y-5 text-center">
+            <p class="font-bold text-slate-600 text-sm">Klik huruf-huruf acak di bawah secara berurutan:</p>
+            
+            <!-- Kotak Jawaban Huruf -->
+            <div id="scramble-answer-slots" class="flex flex-wrap justify-center gap-2 min-h-[56px] p-3 bg-slate-100 rounded-2xl border-2 border-dashed border-slate-300">
+              <!-- Slot huruf terisi -->
+            </div>
+
+            <!-- Pilihan Huruf Acak -->
+            <div id="scramble-letter-pool" class="flex flex-wrap justify-center gap-2.5">
+              <!-- Tombol huruf acak -->
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-3 pt-2">
+              <button onclick="resetScrambleCurrent()" class="btn-3d bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-4 py-2.5 rounded-xl text-sm">
+                ⌫ Hapus / Ulang
+              </button>
+              <button onclick="checkScrambleAnswer()" class="btn-3d bg-purple-600 hover:bg-purple-500 text-white font-display font-bold px-6 py-2.5 rounded-xl text-base">
+                ✅ Cek Jawaban
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEVEL 2: LENGKAPI KALIMAT ("I like ______.") -->
+      <div id="write-level-2" class="hidden bg-white rounded-3xl p-5 sm:p-8 shadow-xl border-4 border-indigo-300 space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-slate-100 pb-4">
+          <div>
+            <span class="bg-indigo-100 text-indigo-800 font-extrabold px-3 py-1 rounded-full text-xs">
+              Writing Level 2 • Menyusun Klausa Sederhana
+            </span>
+            <h2 class="text-2xl font-bold text-slate-800 mt-1">Lengkapi Kalimat "I like ......"</h2>
+          </div>
+          <div class="bg-indigo-50 border-2 border-indigo-200 px-4 py-2 rounded-2xl font-display font-bold text-indigo-800">
+            Soal <span id="sentence-index">1</span> / 6
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+          <div class="bg-indigo-50 rounded-3xl p-4 border-2 border-indigo-200 text-center space-y-2">
+            <div id="sentence-svg-box" class="w-full max-w-[260px] mx-auto rounded-2xl overflow-hidden shadow"></div>
+            <p class="text-xs font-bold text-indigo-700">Lihat gambar di atas dan lengkapi kalimatnya!</p>
+          </div>
+
+          <div class="space-y-4">
+            <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 text-center">
+              <p class="text-xs font-extrabold text-amber-700 uppercase mb-2">Kalimat Rumpang:</p>
+              <div class="flex flex-wrap items-center justify-center gap-2 text-2xl sm:text-3xl font-display font-bold text-slate-800">
+                <span>I like</span>
+                <input id="sentence-input" type="text" placeholder="ketik hobi..." autocomplete="off"
+                  class="border-b-4 border-indigo-500 bg-white px-3 py-1 rounded-xl text-center text-indigo-700 w-48 sm:w-56 focus:outline-none focus:ring-4 focus:ring-indigo-200 text-xl sm:text-2xl" />
+                <span>.</span>
+              </div>
+            </div>
+
+            <!-- Bank Kata Bantuan (Klik untuk mengisi otomatis bagi siswa kelas 3 SD) -->
+            <div class="space-y-2">
+              <p class="text-xs font-bold text-slate-500 text-center">Atau klik pilihan kata di bawah ini (Word Bank):</p>
+              <div id="word-bank-buttons" class="flex flex-wrap justify-center gap-2">
+                <!-- Diisi oleh JS -->
+              </div>
+            </div>
+
+            <div class="flex justify-center pt-2">
+              <button onclick="checkSentenceAnswer()" class="btn-3d bg-indigo-600 hover:bg-indigo-500 text-white font-display font-bold px-8 py-3 rounded-2xl text-lg">
+                ✅ Periksa Kalimatku
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TAB 4: REFLEKSI DIRI (THINK ABOUT YOUR LEARNING - RPP 3B) -->
+    <!-- ========================================================= -->
+    <section id="section-reflect" class="tab-section hidden space-y-6 animate-pop">
+      <div class="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border-4 border-rose-300 space-y-6">
+        <div class="text-center max-w-2xl mx-auto space-y-2">
+          <span class="bg-rose-100 text-rose-800 font-extrabold px-3 py-1 rounded-full text-xs">
+            Lampiran 3B RPP • Think About Your Learning
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-bold text-slate-800">
+            Lembar Refleksi Diri Murid 🌟
+          </h2>
+          <p class="text-slate-600 font-semibold text-sm sm:text-base">
+            Tuliskan namamu dan pilih gambar emotikon yang paling sesuai dengan perasaanmu hari ini!
+          </p>
+        </div>
+
+        <!-- Form Refleksi Sesuai RPP -->
+        <div class="max-w-3xl mx-auto space-y-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-rose-50/70 p-4 rounded-2xl border-2 border-rose-200">
+            <div>
+              <label class="block text-sm font-extrabold text-slate-700 mb-1">Nama Lengkapku:</label>
+              <input id="reflect-student-name" type="text" placeholder="Contoh: Budi / Siti" class="w-full px-4 py-2.5 rounded-xl border-2 border-rose-200 font-bold focus:outline-none focus:border-rose-500" />
+            </div>
+            <div>
+              <label class="block text-sm font-extrabold text-slate-700 mb-1">Hobi Favoritku (My Favorite Hobby):</label>
+              <select id="reflect-fav-hobby" class="w-full px-4 py-2.5 rounded-xl border-2 border-rose-200 font-bold bg-white focus:outline-none focus:border-rose-500">
+                <option value="Swimming">Swimming (Berenang)</option>
+                <option value="Playing football">Playing football (Bermain sepak bola)</option>
+                <option value="Dancing">Dancing (Menari)</option>
+                <option value="Singing">Singing (Menyanyi)</option>
+                <option value="Reading books">Reading books (Membaca buku)</option>
+                <option value="Riding a bike">Riding a bike (Bersepeda)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Pernyataan Refleksi 1 -->
+          <div class="bg-slate-50 p-5 rounded-2xl border-2 border-slate-200 space-y-3">
+            <p class="font-bold text-slate-800 text-base sm:text-lg">
+              1. Saya bisa menyebutkan 6 nama hobi dalam bahasa Inggris.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="reflect-q1-group">
+              <button type="button" onclick="selectReflect(1, 'Sangat Bisa 😊', this)" class="reflect-btn-1 btn-3d bg-white border-2 border-slate-200 p-3 rounded-2xl font-bold flex items-center justify-center gap-2 text-base">
+                <span class="text-2xl">😊</span>
+                <span>Sangat Bisa</span>
+              </button>
+              <button type="button" onclick="selectReflect(1, 'Bisa 🙂', this)" class="reflect-btn-1 btn-3d bg-white border-2 border-slate-200 p-3 rounded-2xl font-bold flex items-center justify-center gap-2 text-base">
+                <span class="text-2xl">🙂</span>
+                <span>Bisa</span>
+              </button>
+              <button type="button" onclick="selectReflect(1, 'Perlu Belajar 😐', this)" class="reflect-btn-1 btn-3d bg-white border-2 border-slate-200 p-3 rounded-2xl font-bold flex items-center justify-center gap-2 text-base">
+                <span class="text-2xl">😐</span>
+                <span>Perlu Belajar</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Pernyataan Refleksi 2 -->
+          <div class="bg-slate-50 p-5 rounded-2xl border-2 border-slate-200 space-y-3">
+            <p class="font-bold text-slate-800 text-base sm:text-lg">
+              2. Saya berani memperagakan gerakan hobi dan mengucapkannya di depan teman.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="reflect-q2-group">
+              <button type="button" onclick="selectReflect(2, 'Sangat Senang 😊', this)" class="reflect-btn-2 btn-3d bg-white border-2 border-slate-200 p-3 rounded-2xl font-bold flex items-center justify-center gap-2 text-base">
+                <span class="text-2xl">😊</span>
+                <span>Sangat Senang</span>
+              </button>
+              <button type="button" onclick="selectReflect(2, 'Senang 🙂', this)" class="reflect-btn-2 btn-3d bg-white border-2 border-slate-200 p-3 rounded-2xl font-bold flex items-center justify-center gap-2 text-base">
+                <span class="text-2xl">🙂</span>
+                <span>Senang</span>
+              </button>
+              <button type="button" onclick="selectReflect(2, 'Malu 😐', this)" class="reflect-btn-2 btn-3d bg-white border-2 border-slate-200 p-3 rounded-2xl font-bold flex items-center justify-center gap-2 text-base">
+                <span class="text-2xl">😐</span>
+                <span>Malu</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Pernyataan Penutup RPP (I can name the hobbies) -->
+          <div class="bg-amber-50 p-5 rounded-2xl border-2 border-amber-200 space-y-3">
+            <p class="font-bold text-slate-800 text-base sm:text-lg">
+              3. Pilih kalimat pencapaian belajarmu hari ini:
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="reflect-q3-group">
+              <button type="button" onclick="selectReflect(3, 'I can name the hobbies!', this)" class="reflect-btn-3 btn-3d bg-white border-2 border-slate-200 p-3 rounded-2xl font-bold text-sm sm:text-base">
+                🌟 I can name the hobbies.
+              </button>
+              <button type="button" onclick="selectReflect(3, 'I can name some hobbies.', this)" class="reflect-btn-3 btn-3d bg-white border-2 border-slate-200 p-3 rounded-2xl font-bold text-sm sm:text-base">
+                👍 I can name some hobbies.
+              </button>
+              <button type="button" onclick="selectReflect(3, 'I need more practice.', this)" class="reflect-btn-3 btn-3d bg-white border-2 border-slate-200 p-3 rounded-2xl font-bold text-sm sm:text-base">
+                💪 I need more practice.
+              </button>
+            </div>
+          </div>
+
+          <div class="text-center">
+            <button onclick="generateCertificate()" class="btn-3d bg-gradient-to-r from-rose-500 to-orange-500 text-white font-display font-bold px-8 py-4 rounded-2xl text-lg sm:text-xl border-2 border-white shadow-lg">
+              🏅 Tampilkan Sertifikat Bintangku!
+            </button>
+          </div>
+
+          <!-- Kartu Sertifikat Hasil Belajar -->
+          <div id="certificate-card" class="hidden animate-pop bg-gradient-to-br from-yellow-100 via-amber-50 to-sky-100 border-8 border-double border-amber-400 rounded-3xl p-6 sm:p-8 text-center space-y-4 shadow-2xl">
+            <div class="flex justify-center gap-2 text-3xl">⭐⭐⭐</div>
+            <h3 class="font-display text-2xl sm:text-4xl font-bold text-amber-700">
+              Certificate of Achievement
+            </h3>
+            <p class="text-sm font-bold text-slate-600 uppercase tracking-widest">Chapter 5: My Hobby • Grade 3</p>
+            <p class="text-base text-slate-700 font-semibold">Diberikan dengan bangga kepada:</p>
+            <p id="cert-name" class="font-display text-3xl sm:text-4xl font-bold text-sky-700 underline decoration-amber-400">
+              Siswa Hebat
+            </p>
+            <div class="bg-white/80 rounded-2xl p-4 max-w-lg mx-auto space-y-1.5 text-sm sm:text-base font-bold text-slate-700 border border-amber-200">
+              <p>❤️ Favorite Hobby: <span id="cert-hobby" class="text-emerald-600">"I like swimming!"</span></p>
+              <p>🗣️ Kemampuan Kosakata: <span id="cert-q1" class="text-sky-600">-</span></p>
+              <p>🎭 Keberanian TPR: <span id="cert-q2" class="text-purple-600">-</span></p>
+              <p>📌 Target Belajar: <span id="cert-q3" class="text-orange-600">-</span></p>
+              <p>⭐ Total Bintang Terkumpul: <span id="cert-stars" class="text-amber-600 font-black">0</span> Bintang</p>
+            </div>
+            <p class="font-display text-lg text-emerald-700 font-bold pt-2">
+              "High five! Keep practicing English every day!" ✋
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- SCRIPT UTAMA APLIKASI -->
+  <script>
+    // =========================================================================
+    // 1. DATA KOSAKATA WAJIB SESUAI LAMPIRAN 1 RPP + ILUSTRASI SVG KUSTOM CERAH
+    // =========================================================================
+    const hobbiesData = [
+      {
+        id: 'swimming',
+        word: 'Swimming',
+        lower: 'swimming',
+        indo: 'Berenang',
+        tpr: 'Gerakan mendayung tangan gaya dada',
+        sentence: 'I like swimming.',
+        badgeColor: 'bg-sky-100 text-sky-800 border-sky-300',
+        svg: `
+          <svg viewBox="0 0 300 200" class="w-full h-full object-cover">
+            <rect width="300" height="200" fill="#BAE6FD"/>
+            <circle cx="255" cy="40" r="24" fill="#FDE047"/>
+            <!-- Kolam Renang -->
+            <rect x="0" y="95" width="300" height="105" fill="#0EA5E9"/>
+            <path d="M0 115 Q35 105 70 115 T140 115 T210 115 T280 115 T350 115" stroke="#7DD3FC" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <path d="M15 155 Q50 145 85 155 T155 155 T225 155 T295 155" stroke="#BAE6FD" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <!-- Pelampung Bebek -->
+            <ellipse cx="52" cy="112" rx="22" ry="11" fill="#FACC15" stroke="#CA8A04" stroke-width="2"/>
+            <circle cx="42" cy="96" r="10" fill="#FACC15" stroke="#CA8A04" stroke-width="2"/>
+            <polygon points="32,96 24,99 32,102" fill="#F97316"/>
+            <!-- Anak Berenang -->
+            <ellipse cx="155" cy="115" rx="34" ry="16" fill="#FDBA74"/>
+            <!-- Tangan mendayung -->
+            <path d="M175 112 Q210 95 232 115" stroke="#FDBA74" stroke-width="14" stroke-linecap="round" fill="none"/>
+            <path d="M135 118 Q105 130 90 115" stroke="#FDBA74" stroke-width="13" stroke-linecap="round" fill="none"/>
+            <!-- Kepala & Kacamata Renang -->
+            <circle cx="172" cy="86" r="26" fill="#FDBA74"/>
+            <path d="M148 80 Q165 52 195 76 Q180 65 148 80 Z" fill="#451A03"/>
+            <rect x="160" y="76" width="14" height="10" rx="4" fill="#38BDF8" stroke="#0369A1" stroke-width="2.5"/>
+            <rect x="177" y="76" width="14" height="10" rx="4" fill="#38BDF8" stroke="#0369A1" stroke-width="2.5"/>
+            <path d="M168 97 Q176 105 184 97" stroke="#9A3412" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <!-- Cipratan air -->
+            <circle cx="220" cy="95" r="4" fill="#E0F2FE"/>
+            <circle cx="235" cy="102" r="3" fill="#FFFFFF"/>
+            <circle cx="105" cy="98" r="4" fill="#FFFFFF"/>
+          </svg>
+        `
+      },
+      {
+        id: 'playing-football',
+        word: 'Playing football',
+        lower: 'playing football',
+        indo: 'Bermain sepak bola',
+        tpr: 'Gerakan mengoper / menendang bola',
+        sentence: 'I like playing football.',
+        badgeColor: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+        svg: `
+          <svg viewBox="0 0 300 200" class="w-full h-full object-cover">
+            <rect width="300" height="125" fill="#E0F2FE"/>
+            <circle cx="45" cy="38" r="22" fill="#FACC15"/>
+            <!-- Lapangan Hijau -->
+            <rect x="0" y="120" width="300" height="80" fill="#22C55E"/>
+            <line x1="0" y1="145" x2="300" y2="145" stroke="#BBF7D0" stroke-width="3"/>
+            <!-- Gawang -->
+            <rect x="215" y="70" width="65" height="52" fill="none" stroke="#FFFFFF" stroke-width="4"/>
+            <line x1="230" y1="70" x2="230" y2="122" stroke="#E2E8F0" stroke-width="1.5"/>
+            <line x1="245" y1="70" x2="245" y2="122" stroke="#E2E8F0" stroke-width="1.5"/>
+            <line x1="260" y1="70" x2="260" y2="122" stroke="#E2E8F0" stroke-width="1.5"/>
+            <!-- Anak Menendang Bola -->
+            <circle cx="120" cy="68" r="21" fill="#FDBA74"/>
+            <path d="M100 62 Q120 40 140 62 Z" fill="#1E293B"/>
+            <circle cx="127" cy="66" r="2.5" fill="#1E293B"/>
+            <path d="M120 75 Q126 81 132 75" stroke="#9A3412" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <!-- Jersey Merah -->
+            <rect x="104" y="89" width="32" height="36" rx="8" fill="#EF4444"/>
+            <text x="120" y="112" font-size="14" font-weight="bold" fill="#FFFFFF" text-anchor="middle">7</text>
+            <!-- Kaki menendang -->
+            <path d="M112 125 L102 158" stroke="#1D4ED8" stroke-width="11" stroke-linecap="round"/>
+            <path d="M128 125 L155 145" stroke="#1D4ED8" stroke-width="11" stroke-linecap="round"/>
+            <!-- Bola Sepak -->
+            <circle cx="182" cy="148" r="18" fill="#FFFFFF" stroke="#1E293B" stroke-width="2.5"/>
+            <polygon points="182,138 190,144 187,154 177,154 174,144" fill="#1E293B"/>
+          </svg>
+        `
+      },
+      {
+        id: 'dancing',
+        word: 'Dancing',
+        lower: 'dancing',
+        indo: 'Menari',
+        tpr: 'Gerakan mengayunkan tangan dan tubuh',
+        sentence: 'I like dancing.',
+        badgeColor: 'bg-pink-100 text-pink-800 border-pink-300',
+        svg: `
+          <svg viewBox="0 0 300 200" class="w-full h-full object-cover">
+            <rect width="300" height="200" fill="#FCE7F3"/>
+            <!-- Panggung Tari -->
+            <rect x="25" y="145" width="250" height="45" rx="10" fill="#D97706"/>
+            <rect x="35" y="140" width="230" height="12" rx="6" fill="#F59E0B"/>
+            <!-- Lampu Hias -->
+            <circle cx="70" cy="30" r="10" fill="#F43F5E"/>
+            <circle cx="150" cy="25" r="10" fill="#FACC15"/>
+            <circle cx="230" cy="30" r="10" fill="#3B82F6"/>
+            <!-- Anak Menari Ceria -->
+            <circle cx="150" cy="62" r="21" fill="#FDBA74"/>
+            <!-- Mahkota/Hiasan Kepala -->
+            <polygon points="134,45 150,28 166,45" fill="#FACC15" stroke="#CA8A04" stroke-width="2"/>
+            <circle cx="144" cy="60" r="2.5" fill="#1E293B"/>
+            <circle cx="156" cy="60" r="2.5" fill="#1E293B"/>
+            <path d="M144 70 Q150 76 156 70" stroke="#9A3412" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <!-- Tangan Mengayun -->
+            <path d="M132 92 Q102 72 92 55" stroke="#FDBA74" stroke-width="10" stroke-linecap="round" fill="none"/>
+            <path d="M168 92 Q198 105 212 85" stroke="#FDBA74" stroke-width="10" stroke-linecap="round" fill="none"/>
+            <!-- Selendang & Baju Tari -->
+            <path d="M132 85 L168 85 L178 135 L122 135 Z" fill="#EC4899"/>
+            <path d="M168 92 Q205 120 222 105" stroke="#10B981" stroke-width="7" fill="none" stroke-linecap="round"/>
+            <!-- Kaki -->
+            <path d="M140 135 L135 155" stroke="#FDBA74" stroke-width="9" stroke-linecap="round"/>
+            <path d="M160 135 L168 152" stroke="#FDBA74" stroke-width="9" stroke-linecap="round"/>
+          </svg>
+        `
+      },
+      {
+        id: 'singing',
+        word: 'Singing',
+        lower: 'singing',
+        indo: 'Menyanyi',
+        tpr: 'Gerakan memegang mikrofon di depan mulut',
+        sentence: 'I like singing.',
+        badgeColor: 'bg-purple-100 text-purple-800 border-purple-300',
+        svg: `
+          <svg viewBox="0 0 300 200" class="w-full h-full object-cover">
+            <rect width="300" height="200" fill="#EDE9FE"/>
+            <!-- Tirai Panggung -->
+            <path d="M0 0 L55 0 Q35 90 0 140 Z" fill="#9333EA"/>
+            <path d="M300 0 L245 0 Q265 90 300 140 Z" fill="#9333EA"/>
+            <rect x="40" y="150" width="220" height="40" rx="12" fill="#7C3AED"/>
+            <!-- Not Balok Musik -->
+            <text x="68" y="65" font-size="26" fill="#EC4899">🎵</text>
+            <text x="210" y="60" font-size="26" fill="#3B82F6">🎶</text>
+            <!-- Anak Menyanyi -->
+            <circle cx="150" cy="68" r="23" fill="#FDBA74"/>
+            <path d="M128 62 Q150 38 172 62 Z" fill="#78350F"/>
+            <circle cx="143" cy="65" r="2.5" fill="#1E293B"/>
+            <circle cx="157" cy="65" r="2.5" fill="#1E293B"/>
+            <!-- Mulut Bernyanyi -->
+            <ellipse cx="150" cy="77" rx="6" ry="7" fill="#E11D48"/>
+            <!-- Baju Warna-warni -->
+            <rect x="130" y="92" width="40" height="55" rx="12" fill="#F59E0B"/>
+            <!-- Mikrofon di depan mulut -->
+            <line x1="168" y1="112" x2="156" y2="86" stroke="#334155" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="155" cy="83" r="7" fill="#94A3B8" stroke="#1E293B" stroke-width="2"/>
+            <path d="M168 112 Q180 105 172 95" stroke="#FDBA74" stroke-width="10" stroke-linecap="round" fill="none"/>
+          </svg>
+        `
+      },
+      {
+        id: 'reading-books',
+        word: 'Reading books',
+        lower: 'reading books',
+        indo: 'Membaca buku',
+        tpr: 'Gerakan membuka telapak tangan seperti buku',
+        sentence: 'I like reading books.',
+        badgeColor: 'bg-amber-100 text-amber-800 border-amber-300',
+        svg: `
+          <svg viewBox="0 0 300 200" class="w-full h-full object-cover">
+            <rect width="300" height="200" fill="#FEF3C7"/>
+            <!-- Rak Buku Latar -->
+            <rect x="25" y="25" width="75" height="125" rx="6" fill="#B45309"/>
+            <rect x="33" y="38" width="12" height="32" fill="#EF4444"/>
+            <rect x="48" y="38" width="12" height="32" fill="#3B82F6"/>
+            <rect x="63" y="38" width="12" height="32" fill="#10B981"/>
+            <rect x="33" y="88" width="14" height="32" fill="#8B5CF6"/>
+            <rect x="50" y="88" width="14" height="32" fill="#F59E0B"/>
+            <!-- Karpet -->
+            <ellipse cx="165" cy="168" rx="105" ry="22" fill="#FDBA74"/>
+            <!-- Anak Membaca Buku -->
+            <circle cx="165" cy="68" r="23" fill="#FDBA74"/>
+            <path d="M142 64 Q165 38 188 64 Z" fill="#451A03"/>
+            <circle cx="158" cy="68" r="2.5" fill="#1E293B"/>
+            <circle cx="172" cy="68" r="2.5" fill="#1E293B"/>
+            <path d="M159 78 Q165 83 171 78" stroke="#9A3412" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <!-- Baju Hijau Toska -->
+            <rect x="143" y="92" width="44" height="52" rx="12" fill="#14B8A6"/>
+            <!-- Buku Terbuka -->
+            <polygon points="128,108 165,116 165,148 128,140" fill="#FFFFFF" stroke="#0284C7" stroke-width="3"/>
+            <polygon points="202,108 165,116 165,148 202,140" fill="#F8FAFC" stroke="#0284C7" stroke-width="3"/>
+            <line x1="136" y1="120" x2="157" y2="124" stroke="#94A3B8" stroke-width="2"/>
+            <line x1="173" y1="124" x2="194" y2="120" stroke="#94A3B8" stroke-width="2"/>
+          </svg>
+        `
+      },
+      {
+        id: 'riding-a-bike',
+        word: 'Riding a bike',
+        lower: 'riding a bike',
+        indo: 'Bersepeda',
+        tpr: 'Gerakan memegang stang dan mengayuh kaki',
+        sentence: 'I like riding a bike.',
+        badgeColor: 'bg-orange-100 text-orange-800 border-orange-300',
+        svg: `
+          <svg viewBox="0 0 300 200" class="w-full h-full object-cover">
+            <rect width="300" height="135" fill="#DBEAFE"/>
+            <circle cx="245" cy="40" r="22" fill="#FACC15"/>
+            <!-- Taman & Jalan -->
+            <rect x="0" y="130" width="300" height="70" fill="#4ADE80"/>
+            <rect x="0" y="150" width="300" height="35" fill="#94A3B8"/>
+            <!-- Roda Sepeda -->
+            <circle cx="105" cy="148" r="24" fill="none" stroke="#1E293B" stroke-width="6"/>
+            <circle cx="105" cy="148" r="6" fill="#64748B"/>
+            <circle cx="195" cy="148" r="24" fill="none" stroke="#1E293B" stroke-width="6"/>
+            <circle cx="195" cy="148" r="6" fill="#64748B"/>
+            <!-- Rangka Sepeda -->
+            <path d="M105 148 L142 115 L182 115 L195 148 M142 115 L150 148 L105 148" stroke="#EF4444" stroke-width="6" fill="none" stroke-linejoin="round"/>
+            <!-- Stang -->
+            <path d="M182 115 L176 92 L190 92" stroke="#334155" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <!-- Anak Bersepeda dengan Helm -->
+            <circle cx="148" cy="62" r="20" fill="#FDBA74"/>
+            <path d="M128 58 Q148 34 168 58 Z" fill="#3B82F6"/>
+            <circle cx="155" cy="62" r="2.5" fill="#1E293B"/>
+            <path d="M150 71 Q156 76 161 71" stroke="#9A3412" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <!-- Badan & Tangan memegang stang -->
+            <path d="M142 82 L136 112" stroke="#F97316" stroke-width="18" stroke-linecap="round"/>
+            <path d="M145 88 L182 93" stroke="#FDBA74" stroke-width="9" stroke-linecap="round"/>
+          </svg>
+        `
+      }
+    ];
+
+    // =========================================================================
+    // 2. STATE APLIKASI & SISTEM SKOR BINTANG
+    // =========================================================================
+    let totalStars = 0;
+    let listenQuestions = [];
+    let currentListenIdx = 0;
+    let listenScore = 0;
+    let listenAnswered = false;
+
+    let currentCharadesHobby = null;
+    let selectedSpeakHobby = hobbiesData[0];
+
+    let currentScrambleIdx = 0;
+    let scrambleTargetLetters = [];
+    let scrambleShuffled = [];
+    let scrambleSelectedIndices = [];
+
+    let currentSentenceIdx = 0;
+
+    let reflectionAnswers = { q1: '', q2: '', q3: '' };
+
+    function addStars(amount, reasonText) {
+      totalStars += amount;
+      document.getElementById('total-stars').textContent = totalStars;
+      playSoundEffect('win');
+      showToast(`+${amount} Bintang! ${reasonText}`, '🌟', 'bg-amber-500');
+    }
+
+    function showToast(message, icon = '🌟', bgClass = 'bg-emerald-500') {
+      const box = document.getElementById('toast-box');
+      const content = document.getElementById('toast-content');
+      document.getElementById('toast-text').textContent = message;
+      document.getElementById('toast-icon').textContent = icon;
+      content.className = `flex items-center gap-3 px-5 py-4 rounded-2xl shadow-xl border-4 border-white text-white font-bold text-base ${bgClass}`;
+      box.classList.remove('hidden');
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(() => {
+        box.classList.add('hidden');
+      }, 3200);
+    }
+
+    // =========================================================================
+    // 3. SISTEM AUDIO (WEB SPEECH API & WEB AUDIO API SOUND EFFECTS)
+    // =========================================================================
+    function speakText(text, rate = 0.85) {
+      try {
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = 'en-US';
+          utterance.rate = rate;
+          utterance.pitch = 1.08;
+          // Pilih suara bahasa Inggris yang jernih jika tersedia
+          const voices = window.speechSynthesis.getVoices();
+          const preferredVoice = voices.find(v => v.lang.includes('en-US') && (v.name.includes('Google') || v.name.includes('Female') || v.name.includes('Samantha')))
+            || voices.find(v => v.lang.includes('en'));
+          if (preferredVoice) utterance.voice = preferredVoice;
+          window.speechSynthesis.speak(utterance);
+        } else {
+          showToast('Browser tidak mendukung suara otomatis, yuk baca bersama guru!', '🗣️', 'bg-sky-500');
+        }
+      } catch (err) {
+        console.error('Speech synthesis error:', err);
+      }
+    }
+
+    function testAudioSystem() {
+      playSoundEffect('correct');
+      speakText("Hello students! Let's learn about hobbies!");
+      showToast('Suara aktif! Dengarkan dengan saksama.', '🔊', 'bg-sky-500');
+    }
+
+    // Efek suara sintetis menggunakan Web Audio API (tanpa URL eksternal)
+    function playSoundEffect(type) {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const now = ctx.currentTime;
+
+        if (type === 'correct') {
+          // Nada Ting-Tong ceria
+          const osc1 = ctx.createOscillator();
+          const gain1 = ctx.createGain();
+          osc1.type = 'sine';
+          osc1.frequency.setValueAtTime(523.25, now); // C5
+          osc1.frequency.setValueAtTime(659.25, now + 0.12); // E5
+          gain1.gain.setValueAtTime(0.25, now);
+          gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+          osc1.connect(gain1);
+          gain1.connect(ctx.destination);
+          osc1.start(now);
+          osc1.stop(now + 0.4);
+        } else if (type === 'wrong') {
+          // Nada Boing lembut
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(240, now);
+          osc.frequency.linearRampToValueAtTime(170, now + 0.28);
+          gain.gain.setValueAtTime(0.22, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.3);
+        } else if (type === 'win') {
+          // Arpeggio kemenangan C-E-G-C6
+          const notes = [523.25, 659.25, 783.99, 1046.50];
+          notes.forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + i * 0.09);
+            gain.gain.setValueAtTime(0.2, now + i * 0.09);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.09 + 0.35);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + i * 0.09);
+            osc.stop(now + i * 0.09 + 0.35);
+          });
+        }
+      } catch (e) {
+        console.warn('Web Audio API tidak tersedia:', e);
+      }
+    }
+
+    // =========================================================================
+    // 4. NAVIGASI TAB
+    // =========================================================================
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-section').forEach(sec => sec.classList.add('hidden'));
+      document.getElementById(`section-${tabName}`).classList.remove('hidden');
+
+      const tabColors = {
+        ready: 'bg-amber-400 text-slate-900 border-amber-500',
+        listen: 'bg-sky-500 text-white border-sky-600',
+        speak: 'bg-emerald-500 text-white border-emerald-600',
+        write: 'bg-purple-600 text-white border-purple-700',
+        reflect: 'bg-rose-500 text-white border-rose-600'
+      };
+
+      document.querySelectorAll('.nav-tab').forEach(btn => {
+        btn.className = 'nav-tab btn-3d flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-2xl font-display font-bold text-sm sm:text-base bg-white text-slate-700 border-2 border-slate-200 hover:bg-slate-50';
+      });
+
+      const activeBtn = document.getElementById(`tab-${tabName}`);
+      activeBtn.className = `nav-tab btn-3d flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-2xl font-display font-bold text-sm sm:text-base border-2 ${tabColors[tabName]}`;
+    }
+
+    // =========================================================================
+    // 5. TAB 0: FLASHCARDS (LISTEN & SAY + TPR)
+    // =========================================================================
+    function renderFlashcards() {
+      const grid = document.getElementById('flashcards-grid');
+      grid.innerHTML = hobbiesData.map((item, idx) => `
+        <div class="bg-white rounded-3xl p-4 shadow-lg border-4 border-white hover:border-sky-300 transition-all flex flex-col justify-between space-y-3">
+          <div>
+            <!-- Ilustrasi SVG Kustom -->
+            <div onclick="speakText('${item.word}')" class="cursor-pointer rounded-2xl overflow-hidden border-2 border-slate-100 shadow-inner aspect-[3/2] relative group">
+              ${item.svg}
+              <div class="absolute top-2 left-2 bg-white/90 backdrop-blur px-2.5 py-0.5 rounded-full text-xs font-black text-slate-700 shadow">
+                #${idx + 1}
+              </div>
+              <div class="absolute bottom-2 right-2 bg-sky-500 text-white p-2 rounded-full shadow-md group-hover:scale-110 transition-transform">
+                🔊
+              </div>
+            </div>
+
+            <!-- Kosakata & Arti -->
+            <div class="pt-3 text-center space-y-1">
+              <h4 class="font-display text-2xl sm:text-3xl font-bold text-slate-800">${item.word}</h4>
+              <span class="inline-block px-3 py-0.5 rounded-full text-xs sm:text-sm font-extrabold border ${item.badgeColor}">
+                Arti: ${item.indo}
+              </span>
+            </div>
+
+            <!-- Panduan Gerakan TPR -->
+            <div class="mt-3 bg-amber-50 border border-amber-200 rounded-2xl p-2.5 text-xs sm:text-sm text-slate-700 flex items-start gap-2">
+              <span class="text-lg leading-none">🤸</span>
+              <div>
+                <span class="font-extrabold text-amber-800">Gerakan TPR:</span>
+                <span class="font-semibold">${item.tpr}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tombol Audio Kata & Kalimat -->
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <button onclick="speakText('${item.word}')" class="btn-3d bg-sky-500 hover:bg-sky-400 text-white font-bold py-2.5 px-3 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1.5">
+              <span>🔊</span>
+              <span>Dengar Kata</span>
+            </button>
+            <button onclick="speakText('${item.sentence}')" class="btn-3d bg-emerald-500 hover:bg-emerald-400 text-white font-bold py-2.5 px-3 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1.5">
+              <span>💬</span>
+              <span>"I like..."</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function playAllVocabulary() {
+      showToast('Mendengarkan 6 kosakata hobi berurutan...', '🎧', 'bg-indigo-500');
+      hobbiesData.forEach((item, index) => {
+        setTimeout(() => {
+          speakText(`${item.word}. ${item.sentence}`);
+        }, index * 3200);
+      });
+    }
+
+    // =========================================================================
+    // 6. TAB 1: LISTEN (LISTEN & CHECK / MATCH - 6 SOAL)
+    // =========================================================================
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function initListenQuiz() {
+      listenQuestions = shuffleArray(hobbiesData);
+      currentListenIdx = 0;
+      listenScore = 0;
+      document.getElementById('listen-score').textContent = '0';
+      document.getElementById('listen-quiz-container').classList.remove('hidden');
+      document.getElementById('listen-complete-screen').classList.add('hidden');
+      renderListenQuestion();
+    }
+
+    function renderListenQuestion() {
+      listenAnswered = false;
+      const target = listenQuestions[currentListenIdx];
+      document.getElementById('listen-progress').textContent = `${currentListenIdx + 1} / ${listenQuestions.length}`;
+      document.getElementById('listen-feedback').classList.add('hidden');
+      document.getElementById('listen-next-btn').classList.add('hidden');
+
+      // Buat 2 pengecoh acak + 1 jawaban benar
+      const distractors = shuffleArray(hobbiesData.filter(h => h.id !== target.id)).slice(0, 2);
+      const options = shuffleArray([target, ...distractors]);
+
+      const grid = document.getElementById('listen-options-grid');
+      grid.innerHTML = options.map(opt => `
+        <button onclick="checkListenAnswer('${opt.id}', this)" class="listen-opt-btn btn-3d bg-white hover:bg-sky-50 border-4 border-slate-200 rounded-3xl p-4 text-center space-y-3 transition-all">
+          <div class="rounded-2xl overflow-hidden aspect-[3/2] border border-slate-100">
+            ${opt.svg}
+          </div>
+          <div class="font-display font-bold text-xl text-slate-800">
+            ( ? ) Pilih Gambar Ini
+          </div>
+        </button>
+      `).join('');
+
+      // Otomatis putar audio saat soal baru muncul
+      setTimeout(() => speakText(target.word), 350);
+    }
+
+    function playListenPrompt(mode) {
+      const target = listenQuestions[currentListenIdx];
+      if (!target) return;
+      if (mode === 'sentence') {
+        speakText(target.sentence);
+      } else {
+        speakText(target.word);
+      }
+    }
+
+    function checkListenAnswer(selectedId, btnEl) {
+      if (listenAnswered) return;
+      listenAnswered = true;
+      const target = listenQuestions[currentListenIdx];
+      const feedback = document.getElementById('listen-feedback');
+      const isCorrect = selectedId === target.id;
+
+      // Buka label teks di semua tombol pilihan
+      const allBtns = document.querySelectorAll('.listen-opt-btn');
+      allBtns.forEach(b => {
+        b.disabled = true;
+      });
+
+      if (isCorrect) {
+        listenScore++;
+        document.getElementById('listen-score').textContent = listenScore;
+        btnEl.classList.remove('border-slate-200');
+        btnEl.classList.add('border-emerald-500', 'bg-emerald-50');
+        btnEl.querySelector('.font-display').innerHTML = `✅ ${target.word}`;
+        feedback.className = 'rounded-2xl p-4 text-center font-bold text-lg bg-emerald-100 text-emerald-800 border-2 border-emerald-300';
+        feedback.innerHTML = `🎉 Awesome! Benar sekali, itu adalah <strong>"${target.word}"</strong> (${target.indo})!`;
+        addStars(1, `Menyimak "${target.word}" dengan tepat!`);
+        speakText(`Awesome! ${target.sentence}`);
+      } else {
+        btnEl.classList.remove('border-slate-200');
+        btnEl.classList.add('border-rose-500', 'bg-rose-50');
+        btnEl.querySelector('.font-display').innerHTML = `❌ Bukan yang ini`;
+        feedback.className = 'rounded-2xl p-4 text-center font-bold text-lg bg-rose-100 text-rose-800 border-2 border-rose-300';
+        feedback.innerHTML = `💡 Hampir tepat! Jawaban yang benar adalah <strong>"${target.word}"</strong> (${target.indo}).`;
+        playSoundEffect('wrong');
+        speakText(`It is ${target.word}`);
+      }
+
+      feedback.classList.remove('hidden');
+      document.getElementById('listen-next-btn').classList.remove('hidden');
+    }
+
+    function nextListenQuestion() {
+      currentListenIdx++;
+      if (currentListenIdx < listenQuestions.length) {
+        renderListenQuestion();
+      } else {
+        document.getElementById('listen-quiz-container').classList.add('hidden');
+        document.getElementById('listen-complete-screen').classList.remove('hidden');
+        document.getElementById('listen-final-msg').textContent = `Kamu menjawab benar ${listenScore} dari ${listenQuestions.length} soal menyimak!`;
+        playSoundEffect('win');
+      }
+    }
+
+    // =========================================================================
+    // 7. TAB 2: SPEAK (CHARADES & LATIHAN PENGUCAPAN MANDIRI)
+    // =========================================================================
+    function drawCharadesCard() {
+      const randomHobby = hobbiesData[Math.floor(Math.random() * hobbiesData.length)];
+      currentCharadesHobby = randomHobby;
+
+      const box = document.getElementById('charades-card-box');
+      box.innerHTML = `
+        <div class="animate-pop space-y-3 w-full">
+          <span class="inline-block bg-emerald-200 text-emerald-900 font-extrabold px-3 py-1 rounded-full text-xs">
+            🤫 Kartu Rahasia (Peragakan Gerakannya!)
+          </span>
+          <div class="w-48 mx-auto rounded-2xl overflow-hidden border-2 border-emerald-400 shadow">
+            ${randomHobby.svg}
+          </div>
+          <div class="bg-white p-3 rounded-2xl border border-emerald-200">
+            <p class="text-xs font-extrabold text-amber-700 uppercase">Panduan Gerakan TPR:</p>
+            <p class="font-bold text-slate-800 text-sm sm:text-base">${randomHobby.tpr}</p>
+          </div>
+          <p id="charades-secret-answer" class="hidden font-display text-2xl font-bold text-emerald-700 pt-1">
+            "${randomHobby.sentence}" (${randomHobby.indo})
+          </p>
+        </div>
+      `;
+
+      document.getElementById('charades-reveal-btn').classList.remove('hidden');
+      speakText('What is my hobby?');
+    }
+
+    function revealCharadesCard() {
+      if (!currentCharadesHobby) return;
+      const ansEl = document.getElementById('charades-secret-answer');
+      ansEl.classList.remove('hidden');
+      speakText(`Yes! ${currentCharadesHobby.sentence}`);
+      addStars(1, `Berhasil bermain Charades "${currentCharadesHobby.word}"!`);
+    }
+
+    function renderSpeakSelector() {
+      const container = document.getElementById('speak-hobby-selector');
+      container.innerHTML = hobbiesData.map(item => `
+        <button onclick="selectSpeakHobby('${item.id}')" id="speak-sel-${item.id}" class="speak-sel-btn btn-3d px-3 py-2 rounded-xl font-bold text-xs sm:text-sm border-2 transition-all ${item.id === selectedSpeakHobby.id ? 'bg-orange-500 text-white border-orange-600' : 'bg-white text-slate-700 border-slate-200 hover:bg-orange-50'}">
+          ${item.word}
+        </button>
+      `).join('');
+    }
+
+    function selectSpeakHobby(hobbyId) {
+      selectedSpeakHobby = hobbiesData.find(h => h.id === hobbyId) || hobbiesData[0];
+      renderSpeakSelector();
+      document.getElementById('speak-target-sentence').textContent = `"${selectedSpeakHobby.sentence}"`;
+      document.getElementById('speak-target-indo').textContent = `(Saya suka ${selectedSpeakHobby.indo.toLowerCase()})`;
+      document.getElementById('speech-result-box').innerHTML = `Siap mengucapkan: <strong>"${selectedSpeakHobby.sentence}"</strong>`;
+    }
+
+    function listenTargetSpeak() {
+      speakText(selectedSpeakHobby.sentence);
+    }
+
+    function startSpeechRecognition() {
+      const resultBox = document.getElementById('speech-result-box');
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+      if (!SpeechRecognition) {
+        resultBox.innerHTML = `⚠️ Browser ini belum mendukung deteksi mikrofon otomatis. Silakan ucapkan <strong>"${selectedSpeakHobby.sentence}"</strong> dengan lantang lalu klik tombol bintang di bawah!`;
+        return;
+      }
+
+      try {
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        resultBox.innerHTML = `🎙️ <span class="text-rose-600 animate-pulse">Mendengarkan suaramu... Ucapkan: "${selectedSpeakHobby.sentence}"</span>`;
+
+        recognition.onresult = (event) => {
+          const transcript = event.results[0][0].transcript;
+          const cleanSpoken = transcript.toLowerCase().replace(/[^a-z\s]/g, '');
+          const targetKeyword = selectedSpeakHobby.lower;
+
+          if (cleanSpoken.includes(targetKeyword)) {
+            resultBox.innerHTML = `✅ Suaramu terdengar: <strong>"${transcript}"</strong> — Pelafalan Sangat Jelas!`;
+            addStars(2, `Mengucapkan "${selectedSpeakHobby.sentence}" dengan tepat!`);
+          } else {
+            resultBox.innerHTML = `🗣️ Terdengar: <strong>"${transcript}"</strong>. Ayo coba lagi ucapkan: <strong>"${selectedSpeakHobby.sentence}"</strong>!`;
+            playSoundEffect('wrong');
+          }
+        };
+
+        recognition.onerror = () => {
+          resultBox.innerHTML = `💡 Mikrofon tidak terdeteksi / diblokir. Tetap semangat! Ucapkan lantang lalu klik tombol kuning di bawah.`;
+        };
+
+        recognition.start();
+      } catch (e) {
+        resultBox.innerHTML = `💡 Gunakan tombol kuning di bawah untuk konfirmasi latihan berbicara.`;
+      }
+    }
+
+    function confirmSpokenSelf() {
+      addStars(1, `Berani mengucapkan "${selectedSpeakHobby.sentence}"!`);
+      speakText(`Great job! ${selectedSpeakHobby.sentence}`);
+    }
+
+    // =========================================================================
+    // 8. TAB 3: WRITE (LEVEL 1 WORD SCRAMBLE & LEVEL 2 COMPLETE SENTENCE)
+    // =========================================================================
+    function switchWriteLevel(lvl) {
+      if (lvl === 1) {
+        document.getElementById('write-level-1').classList.remove('hidden');
+        document.getElementById('write-level-2').classList.add('hidden');
+        document.getElementById('btn-write-lvl1').className = 'btn-3d bg-purple-600 text-white font-display font-bold px-5 py-3 rounded-2xl text-base border-2 border-purple-700';
+        document.getElementById('btn-write-lvl2').className = 'btn-3d bg-white text-slate-700 font-display font-bold px-5 py-3 rounded-2xl text-base border-2 border-slate-200';
+      } else {
+        document.getElementById('write-level-1').classList.add('hidden');
+        document.getElementById('write-level-2').classList.remove('hidden');
+        document.getElementById('btn-write-lvl2').className = 'btn-3d bg-indigo-600 text-white font-display font-bold px-5 py-3 rounded-2xl text-base border-2 border-indigo-700';
+        document.getElementById('btn-write-lvl1').className = 'btn-3d bg-white text-slate-700 font-display font-bold px-5 py-3 rounded-2xl text-base border-2 border-slate-200';
+      }
+    }
+
+    function initScrambleGame() {
+      currentScrambleIdx = 0;
+      loadScrambleWord();
+    }
+
+    function loadScrambleWord() {
+      const item = hobbiesData[currentScrambleIdx];
+      document.getElementById('scramble-index').textContent = currentScrambleIdx + 1;
+      document.getElementById('scramble-svg-box').innerHTML = item.svg;
+      document.getElementById('scramble-hint-indo').textContent = `Arti: ${item.indo}`;
+
+      // Hilangkan spasi untuk susunan huruf yang mudah bagi siswa kelas 3 SD
+      scrambleTargetLetters = item.lower.replace(/\s+/g, '').split('');
+      scrambleShuffled = shuffleArray(scrambleTargetLetters.map((char, idx) => ({ char, id: idx })));
+      scrambleSelectedIndices = [];
+
+      renderScrambleUI();
+    }
+
+    function renderScrambleUI() {
+      const slotsEl = document.getElementById('scramble-answer-slots');
+      const poolEl = document.getElementById('scramble-letter-pool');
+
+      // Render slot jawaban
+      slotsEl.innerHTML = scrambleTargetLetters.map((_, idx) => {
+        const selectedObj = scrambleSelectedIndices[idx];
+        return `
+          <div class="w-10 h-11 sm:w-11 sm:h-12 rounded-xl border-2 flex items-center justify-center font-display font-bold text-xl uppercase ${selectedObj ? 'bg-purple-600 text-white border-purple-700 shadow' : 'bg-white text-slate-300 border-slate-300'}">
+            ${selectedObj ? selectedObj.char : '_'}
+          </div>
+        `;
+      }).join('');
+
+      // Render pool huruf acak
+      poolEl.innerHTML = scrambleShuffled.map(obj => {
+        const isUsed = scrambleSelectedIndices.some(s => s.id === obj.id);
+        return `
+          <button onclick="pickScrambleLetter(${obj.id})" ${isUsed ? 'disabled' : ''} class="btn-3d w-11 h-12 rounded-xl font-display font-bold text-xl uppercase border-2 transition-all ${isUsed ? 'bg-slate-200 text-slate-400 border-slate-200 opacity-40 cursor-not-allowed' : 'bg-amber-300 hover:bg-amber-200 text-slate-900 border-amber-400'}">
+            ${obj.char}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function pickScrambleLetter(id) {
+      if (scrambleSelectedIndices.length >= scrambleTargetLetters.length) return;
+      const found = scrambleShuffled.find(o => o.id === id);
+      if (found && !scrambleSelectedIndices.some(s => s.id === id)) {
+        scrambleSelectedIndices.push(found);
+        renderScrambleUI();
+      }
+    }
+
+    function resetScrambleCurrent() {
+      scrambleSelectedIndices = [];
+      renderScrambleUI();
+    }
+
+    function playScrambleAudio() {
+      speakText(hobbiesData[currentScrambleIdx].word);
+    }
+
+    function checkScrambleAnswer() {
+      const item = hobbiesData[currentScrambleIdx];
+      const userWord = scrambleSelectedIndices.map(s => s.char).join('');
+      const correctWord = scrambleTargetLetters.join('');
+
+      if (userWord === correctWord) {
+        addStars(1, `Berhasil menyusun kata "${item.word}"!`);
+        speakText(`Excellent! ${item.word}`);
+        currentScrambleIdx = (currentScrambleIdx + 1) % hobbiesData.length;
+        setTimeout(loadScrambleWord, 1100);
+      } else {
+        playSoundEffect('wrong');
+        showToast('Belum tepat, coba periksa urutan hurufnya lagi ya!', '💡', 'bg-rose-500');
+      }
+    }
+
+    // Level 2: Complete Sentence
+    function initSentenceGame() {
+      currentSentenceIdx = 0;
+      renderWordBank();
+      loadSentenceQuestion();
+    }
+
+    function renderWordBank() {
+      const bank = document.getElementById('word-bank-buttons');
+      bank.innerHTML = hobbiesData.map(h => `
+        <button type="button" onclick="fillSentenceInput('${h.lower}')" class="btn-3d bg-indigo-100 hover:bg-indigo-200 text-indigo-900 font-bold px-3 py-1.5 rounded-xl text-xs sm:text-sm border border-indigo-300">
+          ${h.lower}
+        </button>
+      `).join('');
+    }
+
+    function fillSentenceInput(word) {
+      document.getElementById('sentence-input').value = word;
+    }
+
+    function loadSentenceQuestion() {
+      const item = hobbiesData[currentSentenceIdx];
+      document.getElementById('sentence-index').textContent = currentSentenceIdx + 1;
+      document.getElementById('sentence-svg-box').innerHTML = item.svg;
+      document.getElementById('sentence-input').value = '';
+    }
+
+    function checkSentenceAnswer() {
+      const item = hobbiesData[currentSentenceIdx];
+      const userVal = document.getElementById('sentence-input').value.trim().toLowerCase();
+
+      if (userVal === item.lower) {
+        addStars(2, `Kalimat lengkap: "${item.sentence}"`);
+        speakText(item.sentence);
+        currentSentenceIdx = (currentSentenceIdx + 1) % hobbiesData.length;
+        setTimeout(loadSentenceQuestion, 1200);
+      } else {
+        playSoundEffect('wrong');
+        showToast(`Ups! Perhatikan gambarnya, jawabannya adalah "${item.lower}".`, '✍️', 'bg-rose-500');
+      }
+    }
+
+    // =========================================================================
+    // 9. TAB 4: REFLEKSI DIRI & SERTIFIKAT BINTANG (LAMPIRAN 3B RPP)
+    // =========================================================================
+    function selectReflect(qNum, value, btnEl) {
+      reflectionAnswers[`q${qNum}`] = value;
+      document.querySelectorAll(`.reflect-btn-${qNum}`).forEach(b => {
+        b.classList.remove('bg-rose-500', 'text-white', 'border-rose-600');
+        b.classList.add('bg-white', 'text-slate-800', 'border-slate-200');
+      });
+      btnEl.classList.remove('bg-white', 'text-slate-800', 'border-slate-200');
+      btnEl.classList.add('bg-rose-500', 'text-white', 'border-rose-600');
+      playSoundEffect('correct');
+    }
+
+    function generateCertificate() {
+      const nameInput = document.getElementById('reflect-student-name').value.trim();
+      const studentName = nameInput || 'Siswa Kelas 3 Hebat';
+      const favHobby = document.getElementById('reflect-fav-hobby').value;
+
+      document.getElementById('cert-name').textContent = studentName;
+      document.getElementById('cert-hobby').textContent = `"I like ${favHobby.toLowerCase()}!"`;
+      document.getElementById('cert-q1').textContent = reflectionAnswers.q1 || 'Sangat Bisa 😊';
+      document.getElementById('cert-q2').textContent = reflectionAnswers.q2 || 'Sangat Senang 😊';
+      document.getElementById('cert-q3').textContent = reflectionAnswers.q3 || 'I can name the hobbies!';
+      document.getElementById('cert-stars').textContent = totalStars;
+
+      const certCard = document.getElementById('certificate-card');
+      certCard.classList.remove('hidden');
+      certCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      playSoundEffect('win');
+      speakText(`Congratulations ${studentName}! High five! I like ${favHobby.toLowerCase()}!`);
+    }
+
+    // =========================================================================
+    // 10. INISIALISASI SAAT HALAMAN DIMUAT
+    // =========================================================================
+    window.onload = function () {
+      renderFlashcards();
+      initListenQuiz();
+      renderSpeakSelector();
+      selectSpeakHobby('swimming');
+      initScrambleGame();
+      initSentenceGame();
+
+      // Memuat daftar voice SpeechSynthesis lebih awal
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.getVoices();
+      }
+    };
+  </script>
+</body>
+</html>
